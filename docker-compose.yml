@@ -1,0 +1,43 @@
+# version: '3.8'  # Docker Compose v2에서는 version 필드가 필요 없습니다
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: koinonia-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: koinonia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: strong_password123
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - koinonia-network
+
+  # Prisma Studio용 (선택사항)
+  # prisma-studio:
+  #   image: node:18-alpine
+  #   container_name: koinonia-prisma-studio
+  #   working_dir: /app
+  #   command: sh -c "npm install -g prisma && prisma studio"
+  #   ports:
+  #     - '5555:5555'
+  #   volumes:
+  #     - .:/app
+  #   environment:
+  #     - DATABASE_URL=postgresql://koinonia_user:strong_password123@postgres:5432/koinonia?schema=public
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - koinonia-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  koinonia-network:
+    driver: bridge
