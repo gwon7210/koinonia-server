@@ -29,8 +29,22 @@ model User {
   likes     Like[]
   follows   Follow[] @relation("UserFollows")
   followers Follow[] @relation("UserFollowers")
+  profile   UserProfile?
 
   @@map("users")
+}
+
+// UserProfile model
+model UserProfile {
+  userId            String  @id
+  selfIntroduction  String?
+  mbit              String?
+  idealType         String?
+
+  // Relations
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
 }
 
 // Post model

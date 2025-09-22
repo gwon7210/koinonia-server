@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, AccountStatus } from './dto/create-user.dto';
+import { CreateUserProfileDto } from './dto/create-user-profile.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import type { User } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
@@ -18,6 +22,21 @@ export class UsersController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('profile')
+  createProfile(
+    @CurrentUser() user: User,
+    @Body() createUserProfileDto: CreateUserProfileDto,
+  ) {
+    return this.usersService.upsertProfile(user.id, createUserProfileDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  findProfile(@CurrentUser() user: User) {
+    return this.usersService.findProfileByUserId(user.id);
   }
 
   @Get()

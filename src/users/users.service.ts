@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, Gender, AccountStatus } from './dto/create-user.dto';
-import { User } from '@prisma/client';
+import { CreateUserProfileDto } from './dto/create-user-profile.dto';
+import { User, UserProfile } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -56,6 +57,28 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: { accountStatus: status },
+    });
+  }
+
+  async upsertProfile(
+    userId: string,
+    createUserProfileDto: CreateUserProfileDto,
+  ): Promise<UserProfile> {
+    const profileData = createUserProfileDto;
+
+    return this.prisma.userProfile.upsert({
+      where: { userId },
+      update: profileData,
+      create: {
+        userId,
+        ...profileData,
+      },
+    });
+  }
+
+  async findProfileByUserId(userId: string): Promise<UserProfile | null> {
+    return this.prisma.userProfile.findUnique({
+      where: { userId },
     });
   }
 }
