@@ -7,6 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, AccountStatus } from './dto/create-user.dto';
@@ -14,6 +17,8 @@ import { CreateUserProfileDto } from './dto/create-user-profile.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { User } from '@prisma/client';
+import { FileInterceptor } from '@nestjs/platform-express';
+import type { UploadedFile as UploadedFileType } from './types/uploaded-file.type';
 
 @Controller('users')
 export class UsersController {
@@ -37,6 +42,28 @@ export class UsersController {
   @Get('profile')
   findProfile(@CurrentUser() user: User) {
     return this.usersService.findProfileByUserId(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile/photo')
+  findProfilePhoto(@CurrentUser() user: User) {
+    return this.usersService.findProfilePhoto(user.id).then((profileImagePath) => ({
+      profileImagePath,
+    }));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('profile/photo/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadProfilePhoto(
+    @CurrentUser() user: User,
+    @UploadedFile() file: UploadedFileType,
+  ) {
+    if (!file) {
+      throw new BadRequestException('프로필 사진 파일이 필요합니다.');
+    }
+
+    return this.usersService.saveProfilePhoto(user.id, file);
   }
 
   @Get()

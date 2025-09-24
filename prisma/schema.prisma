@@ -40,6 +40,7 @@ model UserProfile {
   selfIntroduction  String?
   mbit              String?
   idealType         String?
+  profileImagePath  String?
 
   // Relations
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -12,4 +12,8 @@ export class CreateUserProfileDto {
   @IsOptional()
   @IsString()
   idealType?: string;
+
+  @IsOptional()
+  @IsString()
+  profileImagePath?: string;
 }
