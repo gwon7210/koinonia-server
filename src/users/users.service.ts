@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, Gender, AccountStatus } from './dto/create-user.dto';
 import { CreateUserProfileDto } from './dto/create-user-profile.dto';
+import { UpdateSelfIntroductionDto } from './dto/update-self-introduction.dto';
+import { UpdateMbitDto } from './dto/update-mbit.dto';
+import { UpdateIdealTypeDto } from './dto/update-ideal-type.dto';
+import { UpdateFaithConfessionDto } from './dto/update-faith-confession.dto';
 import { User, UserProfile } from '@prisma/client';
 import { promises as fs } from 'fs';
 import * as path from 'path';
@@ -117,6 +121,67 @@ export class UsersService {
       create: {
         userId,
         profileImagePath: relativePath,
+      },
+    });
+  }
+
+  async updateSelfIntroduction(
+    userId: string,
+    updateSelfIntroductionDto: UpdateSelfIntroductionDto,
+  ): Promise<UserProfile> {
+    const { selfIntroduction } = updateSelfIntroductionDto;
+
+    return this.prisma.userProfile.upsert({
+      where: { userId },
+      update: { selfIntroduction },
+      create: {
+        userId,
+        selfIntroduction,
+      },
+    });
+  }
+
+  async updateMbit(userId: string, updateMbitDto: UpdateMbitDto): Promise<UserProfile> {
+    const { mbit } = updateMbitDto;
+
+    return this.prisma.userProfile.upsert({
+      where: { userId },
+      update: { mbit },
+      create: {
+        userId,
+        mbit,
+      },
+    });
+  }
+
+  async updateIdealType(
+    userId: string,
+    updateIdealTypeDto: UpdateIdealTypeDto,
+  ): Promise<UserProfile> {
+    const { idealType } = updateIdealTypeDto;
+
+    return this.prisma.userProfile.upsert({
+      where: { userId },
+      update: { idealType },
+      create: {
+        userId,
+        idealType,
+      },
+    });
+  }
+
+  async updateFaithConfession(
+    userId: string,
+    updateFaithConfessionDto: UpdateFaithConfessionDto,
+  ): Promise<UserProfile> {
+    const { faithConfession } = updateFaithConfessionDto;
+
+    return this.prisma.userProfile.upsert({
+      where: { userId },
+      update: { faithConfession },
+      create: {
+        userId,
+        faithConfession,
       },
     });
   }

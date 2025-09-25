@@ -41,6 +41,7 @@ model UserProfile {
   mbit              String?
   idealType         String?
   profileImagePath  String?
+  faithConfession   String?
 
   // Relations
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)

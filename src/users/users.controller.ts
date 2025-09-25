@@ -19,6 +19,10 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { User } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { UploadedFile as UploadedFileType } from './types/uploaded-file.type';
+import { UpdateSelfIntroductionDto } from './dto/update-self-introduction.dto';
+import { UpdateMbitDto } from './dto/update-mbit.dto';
+import { UpdateIdealTypeDto } from './dto/update-ideal-type.dto';
+import { UpdateFaithConfessionDto } from './dto/update-faith-confession.dto';
 
 @Controller('users')
 export class UsersController {
@@ -42,6 +46,42 @@ export class UsersController {
   @Get('profile')
   findProfile(@CurrentUser() user: User) {
     return this.usersService.findProfileByUserId(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile/self-introduction')
+  updateSelfIntroduction(
+    @CurrentUser() user: User,
+    @Body() updateSelfIntroductionDto: UpdateSelfIntroductionDto,
+  ) {
+    return this.usersService.updateSelfIntroduction(user.id, updateSelfIntroductionDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile/mbit')
+  updateMbit(
+    @CurrentUser() user: User,
+    @Body() updateMbitDto: UpdateMbitDto,
+  ) {
+    return this.usersService.updateMbit(user.id, updateMbitDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile/ideal-type')
+  updateIdealType(
+    @CurrentUser() user: User,
+    @Body() updateIdealTypeDto: UpdateIdealTypeDto,
+  ) {
+    return this.usersService.updateIdealType(user.id, updateIdealTypeDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile/faith-confession')
+  updateFaithConfession(
+    @CurrentUser() user: User,
+    @Body() updateFaithConfessionDto: UpdateFaithConfessionDto,
+  ) {
+    return this.usersService.updateFaithConfession(user.id, updateFaithConfessionDto);
   }
 
   @UseGuards(JwtAuthGuard)

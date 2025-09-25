@@ -16,4 +16,8 @@ export class CreateUserProfileDto {
   @IsOptional()
   @IsString()
   profileImagePath?: string;
+
+  @IsOptional()
+  @IsString()
+  faithConfession?: string;
 }
