@@ -6,6 +6,7 @@ import { UpdateSelfIntroductionDto } from './dto/update-self-introduction.dto';
 import { UpdateMbitDto } from './dto/update-mbit.dto';
 import { UpdateIdealTypeDto } from './dto/update-ideal-type.dto';
 import { UpdateFaithConfessionDto } from './dto/update-faith-confession.dto';
+import { UpdateHobbiesDto } from './dto/update-hobbies.dto';
 import { User, UserProfile } from '@prisma/client';
 import { promises as fs } from 'fs';
 import * as path from 'path';
@@ -182,6 +183,22 @@ export class UsersService {
       create: {
         userId,
         faithConfession,
+      },
+    });
+  }
+
+  async updateHobbies(
+    userId: string,
+    updateHobbiesDto: UpdateHobbiesDto,
+  ): Promise<UserProfile> {
+    const { hobbies } = updateHobbiesDto;
+
+    return this.prisma.userProfile.upsert({
+      where: { userId },
+      update: { hobbies },
+      create: {
+        userId,
+        hobbies,
       },
     });
   }

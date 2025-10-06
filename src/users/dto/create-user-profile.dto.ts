@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserProfileDto {
   @IsOptional()
@@ -20,4 +20,9 @@ export class CreateUserProfileDto {
   @IsOptional()
   @IsString()
   faithConfession?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  hobbies?: string[];
 }

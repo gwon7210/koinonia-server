@@ -42,6 +42,7 @@ model UserProfile {
   idealType         String?
   profileImagePath  String?
   faithConfession   String?
+  hobbies           Json?
 
   // Relations
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -23,6 +23,7 @@ import { UpdateSelfIntroductionDto } from './dto/update-self-introduction.dto';
 import { UpdateMbitDto } from './dto/update-mbit.dto';
 import { UpdateIdealTypeDto } from './dto/update-ideal-type.dto';
 import { UpdateFaithConfessionDto } from './dto/update-faith-confession.dto';
+import { UpdateHobbiesDto } from './dto/update-hobbies.dto';
 
 @Controller('users')
 export class UsersController {
@@ -82,6 +83,15 @@ export class UsersController {
     @Body() updateFaithConfessionDto: UpdateFaithConfessionDto,
   ) {
     return this.usersService.updateFaithConfession(user.id, updateFaithConfessionDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile/hobbies')
+  updateHobbies(
+    @CurrentUser() user: User,
+    @Body() updateHobbiesDto: UpdateHobbiesDto,
+  ) {
+    return this.usersService.updateHobbies(user.id, updateHobbiesDto);
   }
 
   @UseGuards(JwtAuthGuard)
