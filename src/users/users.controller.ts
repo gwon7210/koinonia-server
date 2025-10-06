@@ -20,7 +20,7 @@ import type { User } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { UploadedFile as UploadedFileType } from './types/uploaded-file.type';
 import { UpdateSelfIntroductionDto } from './dto/update-self-introduction.dto';
-import { UpdateMbitDto } from './dto/update-mbit.dto';
+import { UpdateMbtiDto } from './dto/update-mbti.dto';
 import { UpdateIdealTypeDto } from './dto/update-ideal-type.dto';
 import { UpdateFaithConfessionDto } from './dto/update-faith-confession.dto';
 import { UpdateHobbiesDto } from './dto/update-hobbies.dto';
@@ -59,12 +59,12 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch('profile/mbit')
-  updateMbit(
+  @Patch('profile/mbti')
+  updateMbti(
     @CurrentUser() user: User,
-    @Body() updateMbitDto: UpdateMbitDto,
+    @Body() updateMbtiDto: UpdateMbtiDto,
   ) {
-    return this.usersService.updateMbit(user.id, updateMbitDto);
+    return this.usersService.updateMbti(user.id, updateMbtiDto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -114,6 +114,12 @@ export class UsersController {
     }
 
     return this.usersService.saveProfilePhoto(user.id, file);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('search')
+  searchRecentOppositeGenderUsers(@CurrentUser() user: User) {
+    return this.usersService.searchRecentOppositeGenderUsers(user.id, user.gender);
   }
 
   @Get()

@@ -3,11 +3,15 @@ import { IsArray, IsOptional, IsString } from 'class-validator';
 export class CreateUserProfileDto {
   @IsOptional()
   @IsString()
+  nickname?: string;
+
+  @IsOptional()
+  @IsString()
   selfIntroduction?: string;
 
   @IsOptional()
   @IsString()
-  mbit?: string;
+  mbti?: string;
 
   @IsOptional()
   @IsString()

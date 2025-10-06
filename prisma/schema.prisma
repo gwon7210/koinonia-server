@@ -37,8 +37,9 @@ model User {
 // UserProfile model
 model UserProfile {
   userId            String  @id
+  nickname          String? @unique
   selfIntroduction  String?
-  mbit              String?
+  mbti              String?
   idealType         String?
   profileImagePath  String?
   faithConfession   String?

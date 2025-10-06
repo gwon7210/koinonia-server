@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateMbitDto {
+export class UpdateMbtiDto {
   @IsNotEmpty()
   @IsString()
-  mbit: string;
+  mbti: string;
 }

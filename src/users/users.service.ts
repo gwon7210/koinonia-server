@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, Gender, AccountStatus } from './dto/create-user.dto';
 import { CreateUserProfileDto } from './dto/create-user-profile.dto';
 import { UpdateSelfIntroductionDto } from './dto/update-self-introduction.dto';
-import { UpdateMbitDto } from './dto/update-mbit.dto';
+import { UpdateMbtiDto } from './dto/update-mbti.dto';
 import { UpdateIdealTypeDto } from './dto/update-ideal-type.dto';
 import { UpdateFaithConfessionDto } from './dto/update-faith-confession.dto';
 import { UpdateHobbiesDto } from './dto/update-hobbies.dto';
@@ -142,15 +142,15 @@ export class UsersService {
     });
   }
 
-  async updateMbit(userId: string, updateMbitDto: UpdateMbitDto): Promise<UserProfile> {
-    const { mbit } = updateMbitDto;
+  async updateMbti(userId: string, updateMbtiDto: UpdateMbtiDto): Promise<UserProfile> {
+    const { mbti } = updateMbtiDto;
 
     return this.prisma.userProfile.upsert({
       where: { userId },
-      update: { mbit },
+      update: { mbti },
       create: {
         userId,
-        mbit,
+        mbti,
       },
     });
   }
@@ -199,6 +199,32 @@ export class UsersService {
       create: {
         userId,
         hobbies,
+      },
+    });
+  }
+
+  async searchRecentOppositeGenderUsers(
+    userId: string,
+    gender?: string | null,
+  ): Promise<Array<User & { profile: UserProfile | null }>> {
+    if (!gender) {
+      return [];
+    }
+
+    return this.prisma.user.findMany({
+      where: {
+        AND: [
+          { id: { not: userId } },
+          { gender: { not: gender } },
+          { gender: { not: null } },
+        ],
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 2,
+      include: {
+        profile: true,
       },
     });
   }
